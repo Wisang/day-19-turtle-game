@@ -1,31 +1,48 @@
-from turtle import Turtle, Screen
+from turtle import Turtle, Screen, distance
+import random
 
-t = Turtle()
 screen = Screen()
+w = 1000
+h = 800
+screen.setup(w, h)
+
+colors = ["red", "yellow", "blue", "magenta", "green", "black"]
+
+user_bet = screen.textinput(title="racing bet", prompt="make you bet in color: ")
+turtles = []
+
+game_is_on = True
 
 
-def go_forward():
-    t.forward(10)
+def create_turtle(color_string):
+    t = Turtle(shape="turtle")
+    t.color(color_string)
+    t.shapesize(3, 3)
+    return t
 
-def go_backward():
-    t.backward(10)
 
-def turn_ccw():
-    t.left(10)
+for color in colors:
+    turtle = create_turtle(color)
+    turtles.append(turtle)
 
-def turn_cw():
-    t.right(10)
 
-def clear():
-    t.clear()
-    t.penup()
-    t.home()
-    t.pendown()
+for turtle in turtles:
+    turtle.penup()
+    turtle.goto(-w/2 + 20, -h/3+60*turtles.index(turtle))
 
-screen.listen()
-screen.onkey(fun=go_forward, key="w")
-screen.onkey(fun=go_backward, key="s")
-screen.onkey(fun=turn_ccw, key="a")
-screen.onkey(fun=turn_cw, key="d")
-screen.onkey(fun=clear, key="c")
+if user_bet:
+    game_is_on = True
+
+while game_is_on:
+    for turtle in turtles:
+        if turtle.position()[0] >= w/2 - 30:
+            game_is_on = False
+            if turtle.fillcolor() == user_bet:
+                print("You win")
+            else:
+                print("you lose")
+        distance = random.randint(0, 30)
+        turtle.forward(distance)
+
+
 screen.exitonclick()
